@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Obat</title>
+
+    <!-- Bootstrap 5 CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+    <!-- ===================== NAVBAR ===================== -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">Rumah Sakit</a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarNav" aria-controls="navbarNav"
+                aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/dokter">Dokter</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link active" href="/pasien">Pasien</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/perawat">Perawat</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/obat">Obat</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/ruangan">Ruangan</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/transaksi">Transaksi</a>
+                </li>
+
+            </ul>
+
+            <!-- LOGIN STATUS (Opsional) -->
+            <span class="navbar-text text-white me-3" th:if="${session.Pasien != null}">
+                Hi, <span th:text="${session.Pasien.nama}"></span>
+            </span>
+
+            <!-- Logout -->
+            <a class="btn btn-outline-light" href="/logout">Logout</a>
+
+        </div>
+    </div>
+</nav>
+<!-- ================== END NAVBAR ===================== -->
+<div class="container py-4">
+    <h2 class="mb-4 text-center">Manajemen Obat</h2>
+
+    <div class="row">
+
+        <!-- LEFT: TABLE -->
+        <div class="col-md-7">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white fw-bold">
+                    Daftar Obat
+                </div>
+                <div class="card-body">
+
+                    <table class="table table-bordered table-striped">
+                        <thead class="table-secondary">
+                        <tr>
+                            <th>ID</th>
+                            <th>Nama</th>
+                            <th>Harga (RP)</th>
+                            <th>Aksi</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="o : ${obatList}">
+                            <td th:text="${o.id}"></td>
+                            <td th:text="${o.nama}"></td>
+                            <td th:text="${o.harga}"></td>
+
+                            <td>
+                                <a th:href="@{'/obat/' + ${o.id}}" class="btn btn-sm btn-warning">Edit</a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT: FORM -->
+        <div class="col-md-5">
+            <div class="card shadow-sm">
+                <div class="card-header bg-success text-white fw-bold">
+                    Form Obat
+                </div>
+
+                <div class="card-body">
+
+                    <form th:action="@{/obat/submit}" th:object="${obatRec}" method="post">
+
+                        <!-- ID HIDDEN -->
+                        <input type="hidden" th:field="*{id}"/>
+
+                        <!-- NAMA -->
+                        <div class="mb-3">
+                            <label class="form-label">Nama Obat</label>
+                            <input type="text" class="form-control" th:field="*{nama}" placeholder="Nama obat..." required>
+                        </div>
+
+                        <!-- HARGA -->
+                        <div class="mb-3">
+                            <label class="form-label">Harga (RP)</label>
+                            <input type="number" step="0.01" class="form-control" th:field="*{harga}" placeholder="Harga obat..." required>
+                        </div>
+
+                        <div class="d-flex gap-2">
+
+                            <!-- ADD -->
+                            <button type="submit" name="add" class="btn btn-primary"
+                                    th:if="${obatRec.id == null}">
+                                Tambah
+                            </button>
+
+                            <!-- EDIT -->
+                            <button th:formaction="@{'/obat/submit/' + ${obatRec.id}}"
+                                    type="submit" name="edit"
+                                    class="btn btn-warning"
+                                    th:if="${obatRec.id != null}">
+                                Update
+                            </button>
+
+                            <!-- DELETE -->
+                            <button th:formaction="@{'/obat/submit/' + ${obatRec.id}}"
+                                    type="submit" name="delete"
+                                    class="btn btn-danger"
+                                    th:if="${obatRec.id != null}"
+                                    onclick="return confirm('Hapus obat ini?');">
+                                Hapus
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

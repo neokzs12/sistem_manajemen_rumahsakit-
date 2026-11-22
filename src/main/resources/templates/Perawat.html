@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Data Perawat</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+<!-- ===================== NAVBAR ===================== -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">Rumah Sakit</a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarNav" aria-controls="navbarNav"
+                aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/dokter">Dokter</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link active" href="/pasien">Pasien</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/perawat">Perawat</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/obat">Obat</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/ruangan">Ruangan</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/transaksi">Transaksi</a>
+                </li>
+
+            </ul>
+
+            <!-- LOGIN STATUS (Opsional) -->
+            <span class="navbar-text text-white me-3" th:if="${session.Pasien != null}">
+                Hi, <span th:text="${session.Pasien.nama}"></span>
+            </span>
+
+            <!-- Logout -->
+            <a class="btn btn-outline-light" href="/logout">Logout</a>
+
+        </div>
+    </div>
+</nav>
+<!-- ================== END NAVBAR ===================== -->
+<div class="container mt-5">
+    <h2 class="mb-4">Data Perawat</h2>
+
+    <!-- =================== FORM ADD/EDIT =================== -->
+    <div class="card mb-4">
+        <div class="card-body">
+
+            <form th:action="@{${perawatRec.id} != null ? '/perawat/submit/' + ${perawatRec.id} : '/perawat/submit'}"
+                  th:object="${perawatRec}" method="post">
+
+                <div class="mb-3">
+                    <label for="nama" class="form-label">Nama Perawat</label>
+                    <input type="text" th:field="*{nama}" class="form-control" id="nama" required>
+                </div>
+
+                <div class="mb-3">
+                   <label for="shift" class="form-label">Shift</label>
+                    <select th:field="*{shift}" class="form-control" id="shift" required>
+                        <option value="">-- Pilih Shift --</option>
+                        <option value="Pagi">Pagi</option>
+                        <option value="Malam">Malam</option>
+                    </select>
+                </div>
+
+                <!-- Tombol ADD / EDIT / DELETE -->
+                <div>
+                    <button type="submit" name="add" th:if="${perawatRec.id == null}"
+                            class="btn btn-primary">Tambah</button>
+
+                    <button type="submit" name="edit" th:if="${perawatRec.id != null}"
+                            class="btn btn-warning">Update</button>
+
+                    <button type="submit" name="delete" th:if="${perawatRec.id != null}"
+                            class="btn btn-danger" onclick="return confirm('Yakin ingin menghapus pasien ini?');">Hapus</button>
+                            
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <!-- =================== TABLE PERAWAT =================== -->
+    <div class="card">
+        <div class="card-body">
+            <table class="table table-bordered table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th>ID</th>
+                        <th>Nama Perawat</th>
+                        <th>Shift</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr th:each="p : ${perawatList}">
+                        <td th:text="${p.id}">1</td>
+                        <td th:text="${p.nama}">Ani</td>
+                        <td th:text="${p.shift}">Pagi</td>
+                        <td>
+                            <a th:href="@{'/perawat/' + ${p.id}}"
+                               class="btn btn-sm btn-info">Edit</a>
+                        </td>
+                    </tr>
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
